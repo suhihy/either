@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="progress-stacked mb-5" style="height:50px;">
+        <div class="progress-bar" role="progressbar" style="width: {{a_percentage}}%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">{{a_percentage}}%</div>
+        <div class="progress-bar bg-success bg-danger" role="progressbar" style="width: {{b_percentage}}%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">{{b_percentage}}%</div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 mb-3 mb-sm-0">
+          <div class="card text-white">
+            <div class="card-body bg-primary">
+              <h5 class="card-title">{{either.title}}</h5>
+              <p class="card-text">A: {{either.a}}!!</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card text-white">
+            <div class="card-body bg-danger">
+              <h5 class="card-title">{{either.title}}</h5>
+              <p class="card-text">B: {{either.b}}!!</p>
+            </div>
+          </div>
+        </div>
+    </div>
+    <hr>
+    <form action="{% url 'questions:comment_create' either_id=either.id %}" method="POST">
+        {% csrf_token %}
+        {{form}}
+        <input type="submit" class="btn btn-primary">
+
+    </form>
+    <hr>
+    <h2>Answers</h2>
+    {% for comment in comments %}
+        {% if comment.choice == 'A' %}
+            <div class="alert alert-primary" role="alert">
+            {{comment.choice}}
+            {{comment.content}}
+            </div>
+        {% elif comment.choice == 'B' %}
+            <div class="alert alert-danger" role="alert">
+            {{comment.choice}}
+            {{comment.content}}
+            </div>
+        {% endif %}
+    {% endfor %}
+
+{% endblock %}
